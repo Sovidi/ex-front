@@ -1,18 +1,10 @@
-import React, {createContext, useReducer, useEffect} from 'react';
+import React, {createContext, useReducer, useEffect, useState} from 'react';
 import axios from "axios";
-
 const MyContext = createContext();
-
-const insert = (state, action) => {
-    switch (action.type) {
-        case "post" : return [...state, action.d.data];
-        default : return action.d.data;
-    }
-}
 
 function Context({children}) {
 
-    const [data, dispatch] = useReducer(insert, [])
+    const [data, setData] = useState([]);
 
     const instance = axios.create({
         baseURL:`${process.env.React_App_Server}`
@@ -25,10 +17,13 @@ function Context({children}) {
             case "post" :
                 res = await instance.post("/insert", data);
                 break;
+            case "del" :
+                res = await instance.delete(`/abc/${data}`)
+                break;
             default :
                 res = await instance.get("/abc");
         }
-        dispatch({type, d: res})
+        setData(res.data);
     }
 
     useEffect(()=> {

@@ -8,10 +8,9 @@ function Insert() {
         e.preventDefault();
         let formdata = new FormData(e.target);
         let objData = Object.fromEntries(formdata);
-        
+
         fetchFn("post", objData);
     }
-
     return(
         <div>
             <form onSubmit={(e)=>{insertFn(e)}}>

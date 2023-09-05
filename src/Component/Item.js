@@ -1,11 +1,16 @@
-import React from 'react'
+import React, {useContext} from 'react'
+import { MyContext } from '../Context'
+
 
 function Item({item}) {
+    const {data, fetchFn} = useContext(MyContext);
+
   return (
-    <code>
+    <li>
         {item.msg}
-    </code>
-  )
+        <button onClick={()=>{fetchFn("del", item.id)}}>삭제</button>
+    </li>
+)
 }
 
 export default Item

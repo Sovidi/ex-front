@@ -1,78 +1,9 @@
 import './App.css';
-import axios from "axios";
-import {useState, useEffect} from "react";
-
-const instance = axios.create({
-  baseURL:`${process.env.React_App_Server}`
-})
-
-
-function Insert({data, setData}) {
-
-  const insertFn = (e) => {
-    e.preventDefault();
-    let formdata = new FormData(e.target);
-    let objData = Object.fromEntries(formdata);
-    instance.post("/insert", objData)
-    .then(res => {
-      setData(res.data)
-    })
-  }
-
-  return(
-    <div>
-      <form onSubmit={(e)=> {insertFn(e)}}>
-        <input type='text' name='msg'></input>
-        <input type='submit' value="저장"></input>
-      </form>
-    </div>
-  )
-}
-
-
-
-
-function List({data, setData}) {
-  console.log(data);
-  const remove = (id) => {
-    instance.delete(`/abc/${id}`)
-    .then(res=> {
-      setData(res.data)
-    })
-  }
-
-  return(
-    <li>
-      {
-        data.map(item => (
-          <li>
-            {item.msg}
-            <button onClick={()=>{remove(item.id)}}>삭제</button>
-          </li>
-        ))
-      }
-    </li>
-
-  )
-}
-
+import List from './Component/List';
+import Insert from './Component/Insert';
+import { Context } from './Context';
 
 function App() {
-
-  const [data, setData] = useState([]);
-
-  const getData = () => {
-    instance.get('/abc')
-    .then(res=>{
-      setData(res.data);
-    })
-  }
-
-  useEffect(()=> {
-    getData();
-  }, []);
-
-
   
   // // 뒤에 파라미터값 100 이 req.query
   // instance.get("/abc?param=100")
@@ -86,15 +17,16 @@ function App() {
   //   console.log(res)
   // })
 
-
   return (
-    <div className="App">
-      <h2>한줄댓글</h2>
-        <Insert data={data} setData={setData}/>
-      <ul>
-        <List data={data} setData={setData}/>
-      </ul>
-    </div>
+    <Context>
+      <div>
+        <h2>한줄댓글</h2>
+          <Insert/>
+        <ul>
+          <List/>
+        </ul>
+      </div>
+    </Context>
   );
 }
 
